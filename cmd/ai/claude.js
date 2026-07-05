@@ -2,8 +2,8 @@ import crypto from 'crypto';
 import { chatWithClaude } from '../../scrape/ai.js';
 
 export default {
-    name: 'ai',
-    aliases: ['claude'],
+    name: 'claude',
+    aliases: ['ai'],
     description: 'Tanya jawab dengan Claude AI (mendukung sesi percakapan per pengguna).',
     category: 'ai',
     async execute(sock, m, args) {

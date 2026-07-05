@@ -7,7 +7,7 @@ export default {
         selfModeOn: 'Y',
         selfModeOff: 'Y dah',
         aiReset: 'Sesi obrolan AI Claude Anda berhasil di-reset!',
-        aiHelp: 'Silakan masukkan pertanyaan kamu. Contoh: *.ai jelaskan teori relativitas* atau *.ai reset* untuk menghapus riwayat obrolan.',
+        aiHelp: 'Silakan masukkan pertanyaan kamu. Contoh: *.claude jelaskan teori relativitas* atau *.claude reset* untuk menghapus riwayat obrolan.',
         hamaTargetHelp: 'Silakan reply atau tag target user yang ingin ditambahkan sebagai hama. Contoh: .addhama <teks>',
         hamaTextHelp: 'Silakan masukkan pesan respons yang ingin dikirimkan. Contoh: .addhama berisik lu',
         hamaDeleteHelp: 'Silakan reply atau tag target user yang ingin dihapus dari daftar hama.',
