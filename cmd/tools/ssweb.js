@@ -4,7 +4,7 @@ export default {
     name: 'ssweb',
     aliases: ['ss', 'screenshot'],
     description: 'Mengambil screenshot dari halaman website.',
-    category: 'general',
+    category: 'tools',
     async execute(sock, m, args) {
         if (args.length === 0) {
             await m.reply('Masukkan URL website yang ingin di-screenshot. Contoh: .ssweb https://google.com');

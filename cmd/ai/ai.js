@@ -5,7 +5,7 @@ export default {
     name: 'ai',
     aliases: ['claude'],
     description: 'Tanya jawab dengan Claude AI (mendukung sesi percakapan per pengguna).',
-    category: 'general',
+    category: 'ai',
     async execute(sock, m, args) {
         const option = args[0] ? args[0].toLowerCase() : '';
         const sessionId = crypto.createHash('md5').update(m.sender).digest('hex');

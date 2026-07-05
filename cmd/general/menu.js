@@ -60,6 +60,8 @@ export default {
             owner: '👑',
             search: '🔍',
             testing: '🧪',
+            tools: '🛠️',
+            ai: '🤖',
             other: '📂'
         };
 

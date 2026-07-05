@@ -14,7 +14,7 @@ export default {
     name: 'tourl',
     aliases: ['upload', 'uploader'],
     description: 'Mengunggah media ke Shaq Cloud dan menghasilkan tautan URL dengan tombol salin.',
-    category: 'general',
+    category: 'tools',
     async execute(sock, m, args) {
         const mediaTypes = ['imageMessage', 'videoMessage', 'audioMessage', 'documentMessage', 'stickerMessage'];
         const isSelfMedia = mediaTypes.includes(m.type);
