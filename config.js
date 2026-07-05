@@ -14,16 +14,9 @@ export default {
         groupOnly: 'Perintah ini hanya dapat digunakan di dalam grup.'
     },
     rent: {
-        priceRent: 'Rp 10.000 / grup / bulan',
-        priceScript: 'Rp 50.000 (Full Source Code)',
-        benefits: [
-            'Bot aktif 24 jam (uptime tinggi)',
-            'Fitur Downloader lengkap (IG, TikTok, FB, YT, Spotify)',
-            'Fitur Maker (Stiker, Brat, Bratvid, Removebg)',
-            'Auto-respons target hama gratis',
-            'Sewa grup bergaransi'
-        ],
+        priceRent: 'Rp 25.000 / grup / bulan (bisa lebih)',
+        priceScript: 'Rp 100.000 (Full Source Code)',
         paymentMethods: 'Gopay, OVO, Dana, QRIS',
-        contact: 'Ketik *.owner* untuk menghubungi owner bot.'
+        contact: 'Ketik *.owner* atau klik tombol di bawah untuk menghubungi owner.'
     }
 };
