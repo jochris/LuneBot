@@ -15,8 +15,7 @@ export default {
         let bodyText = `💳 *SEWA BOT & BELI SCRIPT* 🌙\n\n`;
         bodyText += `🤖 *Harga Sewa Bot (Masuk Grup)*:\n➜ ${configRent.priceRent}\n\n`;
         bodyText += `💻 *Harga Script Bot (Source Code)*:\n➜ ${configRent.priceScript}\n\n`;
-        bodyText += `💳 *Metode Pembayaran*:\n➜ ${configRent.paymentMethods}\n\n`;
-        bodyText += `📞 *Kontak Owner*:\n➜ ${configRent.contact}`;
+        bodyText += `💳 *Metode Pembayaran*:\n➜ ${configRent.paymentMethods}`;
 
         try {
             const msg = generateWAMessageFromContent(m.from, {
