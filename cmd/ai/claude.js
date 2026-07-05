@@ -3,7 +3,7 @@ import { chatWithClaude } from '../../scrape/ai.js';
 
 export default {
     name: 'claude',
-    aliases: ['ai'],
+    aliases: [],
     description: 'Tanya jawab dengan Claude AI (mendukung sesi percakapan per pengguna).',
     category: 'ai',
     async execute(sock, m, args) {
