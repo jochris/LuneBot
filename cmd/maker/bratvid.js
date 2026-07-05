@@ -60,7 +60,7 @@ export default {
             fs.unlinkSync(tempWebp);
 
             const packName = 'LuneBot';
-            const author = `${m.pushName || 'User'}\nsewa bot hubungi 62895416602000`;
+            const author = `${m.pushName || 'User'}\n\nSewa Bot Hubungi 62895416602000`;
             const webpWithMetadata = await addStickerMetadata(webpBuffer, packName, author);
 
             await sock.sendMessage(m.from, { sticker: webpWithMetadata }, { quoted: m.raw });
