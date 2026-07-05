@@ -1,5 +1,4 @@
-import axios from 'axios';
-import FormData from 'form-data';
+import { uploadToShaqCloud, BANNED_EXT, getExt } from '../../scrape/uploader.js';
 import { fileTypeFromBuffer } from 'file-type';
 import { proto, generateWAMessageFromContent } from '@itsliaaa/baileys';
 
@@ -39,30 +38,23 @@ export default {
             const mime = ft ? ft.mime : 'application/octet-stream';
             const filename = `upload_${Date.now()}.${ext}`;
 
-            const form = new FormData();
-            form.append('file', buffer, {
-                filename: filename,
-                contentType: mime
-            });
-
-            const res = await axios.post('https://myapi.astralune.cv/api/v1/tools/cloud', form, {
-                headers: form.getHeaders(),
-                maxContentLength: Infinity,
-                maxBodyLength: Infinity
-            });
-
-            if (!res.data || !res.data.status || !res.data.data) {
-                throw new Error(res.data?.message || 'Gagal mengunggah file.');
+            const checkExt = getExt(filename);
+            if (BANNED_EXT.has(checkExt)) {
+                throw new Error(`Ekstensi '${checkExt}' diblokir (executable)`);
             }
 
-            const data = res.data.data;
-            const url = data.url;
-            const sizeStr = formatSize(data.size || buffer.length);
+            const result = await uploadToShaqCloud(buffer, filename, mime);
+            if (!result || !result.success || !result.url) {
+                throw new Error(result?.error || 'Upstream tidak mengembalikan URL');
+            }
+
+            const url = result.url;
+            const sizeStr = formatSize(result.size || buffer.length);
 
             let bodyText = `☁️ *SHAQ CLOUD UPLOADER*\n\n`;
-            bodyText += `📝 *Nama*: ${data.filename || filename}\n`;
+            bodyText += `📝 *Nama*: ${result.originalName || filename}\n`;
             bodyText += `📦 *Ukuran*: ${sizeStr}\n`;
-            bodyText += `🏷️ *Mime*: ${data.mime || mime}`;
+            bodyText += `🏷️ *Mime*: ${mime}`;
 
             const msg = generateWAMessageFromContent(m.from, {
                 viewOnceMessage: {

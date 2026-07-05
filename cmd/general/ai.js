@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { chatWithClaude } from '../../scrape/ai.js';
 
 export default {
     name: 'ai',
@@ -11,16 +12,7 @@ export default {
 
         if (option === 'reset' || option === 'clear') {
             try {
-                const apiUrl = `https://myapi.astralune.cv/api/v1/ai/claude?prompt=reset&session_id=${sessionId}&reset=1`;
-                const res = await fetch(apiUrl);
-                if (!res.ok) {
-                    throw new Error(`API returned HTTP ${res.status}`);
-                }
-                const json = await res.json();
-                if (!json.status) {
-                    throw new Error(json.message || 'Gagal mereset sesi.');
-                }
-
+                await chatWithClaude('', sessionId, true);
                 await m.reply(global.config.responses.aiReset);
             } catch (err) {
                 console.error('Error saat reset AI session:', err);
@@ -40,18 +32,8 @@ export default {
         }
 
         try {
-            const apiUrl = `https://myapi.astralune.cv/api/v1/ai/claude?prompt=${encodeURIComponent(prompt.trim())}&session_id=${sessionId}`;
-            const res = await fetch(apiUrl);
-            if (!res.ok) {
-                throw new Error(`API returned HTTP ${res.status}`);
-            }
-
-            const json = await res.json();
-            if (!json.status || !json.data) {
-                throw new Error(json.message || 'Gagal mendapatkan tanggapan dari AI.');
-            }
-
-            const replyText = json.data.reply || 'Tidak ada tanggapan.';
+            const res = await chatWithClaude(prompt.trim(), sessionId, false);
+            const replyText = res.reply || 'Tidak ada tanggapan.';
             await m.reply(replyText);
         } catch (err) {
             console.error('Error Claude AI:', err);

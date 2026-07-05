@@ -1,3 +1,4 @@
+import { bratGen } from '../../scrape/brat.js';
 import sharp from 'sharp';
 
 export default {
@@ -23,13 +24,7 @@ export default {
         try {
             await m.react('⏳');
 
-            const apiUrl = `https://myapi.astralune.cv/api/v1/maker/brat?text=${encodeURIComponent(text.trim())}&blur=3`;
-            const res = await fetch(apiUrl);
-            if (!res.ok) {
-                throw new Error(`API returned HTTP ${res.status}`);
-            }
-
-            const pngBuffer = Buffer.from(await res.arrayBuffer());
+            const pngBuffer = await bratGen(text.trim(), { BLUR: 3 });
 
             const webpBuffer = await sharp(pngBuffer)
                 .resize(512, 512, {

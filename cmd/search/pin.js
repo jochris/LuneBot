@@ -1,15 +1,4 @@
-const PINTEREST_API = 'https://myapi.astralune.cv/api/v1/search/pinterest';
-
-async function searchPinterest(query) {
-    const url = PINTEREST_API + '?q=' + encodeURIComponent(query);
-    const res = await fetch(url, {
-        headers: { 'user-agent': 'Mozilla/5.0' }
-    });
-    if (!res.ok) throw new Error('Pinterest API error: ' + res.status);
-    const data = await res.json();
-    if (!data.status) throw new Error('Pinterest API returned error');
-    return data.result || [];
-}
+import { pinterestSearch } from '../../scrape/pinterest.js';
 
 export default {
     name: 'pin',
@@ -37,7 +26,7 @@ export default {
         count = Math.max(1, Math.min(10, count));
 
         try {
-            const results = await searchPinterest(query);
+            const results = await pinterestSearch(query);
             const validResults = results.filter(item => item.image);
 
             if (validResults.length === 0) {

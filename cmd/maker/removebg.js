@@ -1,3 +1,5 @@
+import { removeBg } from '../../scrape/removebg.js';
+
 export default {
     name: 'removebg',
     aliases: ['nobg', 'rbg'],
@@ -16,32 +18,9 @@ export default {
 
             const mediaBuffer = await m.download();
             const mimeType = m.type === 'imageMessage' ? m.mime : m.quoted.mime;
+            const filename = `image_${Date.now()}.${mimeType.split('/')[1] || 'jpg'}`;
 
-            const formData = new FormData();
-            const blob = new Blob([mediaBuffer], { type: mimeType });
-            formData.append('file', blob, 'image.jpg');
-
-            const apiUrl = 'https://myapi.astralune.cv/api/v1/tools/removebg';
-            const res = await fetch(apiUrl, {
-                method: 'POST',
-                body: formData
-            });
-
-            if (!res.ok) {
-                let errMsg = `HTTP ${res.status}`;
-                try {
-                    const errJson = await res.json();
-                    errMsg = errJson.message || errMsg;
-                } catch {
-                    try {
-                        const txt = await res.text();
-                        errMsg = txt.slice(0, 150) || errMsg;
-                    } catch {}
-                }
-                throw new Error(errMsg);
-            }
-
-            const outBuffer = Buffer.from(await res.arrayBuffer());
+            const outBuffer = await removeBg(mediaBuffer, mimeType, filename);
 
             await sock.sendMessage(m.from, { 
                 image: outBuffer, 

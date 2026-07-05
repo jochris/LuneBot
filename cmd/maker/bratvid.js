@@ -1,3 +1,4 @@
+import { bratVid } from '../../scrape/brat.js';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import fs from 'fs';
@@ -34,13 +35,16 @@ export default {
         try {
             await m.react('⏳');
 
-            const apiUrl = `https://myapi.astralune.cv/api/v1/maker/bratvid?text=${encodeURIComponent(text.trim())}&blur=3`;
-            const res = await fetch(apiUrl);
-            if (!res.ok) {
-                throw new Error(`API returned HTTP ${res.status}`);
-            }
-
-            const videoBuffer = Buffer.from(await res.arrayBuffer());
+            const videoBuffer = await bratVid(text.trim(), {
+                outputFormat: "mp4",
+                fast_progress: true,
+                lyric: {
+                    maxWordPerLayer: 5,
+                    frameDuration: 0.7,
+                    lastFrameDuration: 1.5,
+                },
+                brat: { BLUR: 3 },
+            });
 
             const tempMp4 = path.join('/tmp', `bratvid_${Date.now()}.mp4`);
             const tempWebp = path.join('/tmp', `bratvid_${Date.now()}.webp`);
