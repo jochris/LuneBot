@@ -15,10 +15,12 @@ export default {
 
         try {
             await m.react('⏳');
-            await m.reply('Sedang memproses permintaan musik AI Anda, harap tunggu... (Proses ini memakan waktu sekitar 1-2 menit)');
+            const statusMsg = await sock.sendMessage(m.from, { text: '⏳ Menghubungkan ke server AI...' }, { quoted: m.raw });
 
             const identityId = generateUUID();
             const token = await login(identityId);
+
+            await sock.sendMessage(m.from, { edit: statusMsg.key, text: '⏳ Mengirimkan perintah pembuatan musik...' });
 
             const createdIds = await createMusic({
                 prompt: prompt,
@@ -37,6 +39,7 @@ export default {
             const pollDelayMs = 5000;
 
             for (let i = 0; i < maxPoll; i++) {
+                await sock.sendMessage(m.from, { edit: statusMsg.key, text: `⏳ Sedang memproses dan merender lagu... (${Math.round(((i + 1) / maxPoll) * 100)}%)` });
                 await new Promise(resolve => setTimeout(resolve, pollDelayMs));
                 const progress = await getProgress(taskId, identityId, token);
                 if (progress && progress.music_file) {
@@ -48,6 +51,8 @@ export default {
             if (!completedData || !completedData.music_file) {
                 throw new Error('Timeout! Proses pembuatan musik melebihi batas waktu (3 menit).');
             }
+
+            await sock.sendMessage(m.from, { edit: statusMsg.key, text: '⏳ Mengunduh berkas audio hasil render...' });
 
             const coverUrl = completedData.cover || completedData.image_url || '';
             const lyrics = completedData.lyrics || '';
@@ -67,21 +72,7 @@ export default {
             }
             const audioBuffer = Buffer.from(await audioRes.arrayBuffer());
 
-            if (coverUrl) {
-                try {
-                    const coverRes = await fetch(coverUrl);
-                    if (coverRes.ok) {
-                        const coverBuffer = Buffer.from(await coverRes.arrayBuffer());
-                        await sock.sendMessage(m.from, { image: coverBuffer, caption: captionText }, { quoted: m.raw });
-                    } else {
-                        await m.reply(captionText);
-                    }
-                } catch {
-                    await m.reply(captionText);
-                }
-            } else {
-                await m.reply(captionText);
-            }
+            await sock.sendMessage(m.from, { edit: statusMsg.key, text: captionText });
 
             await sock.sendMessage(
                 m.from,
