@@ -65,11 +65,14 @@ export default {
             other: '📂'
         };
 
+        const sortedCategoryNames = Object.keys(categories).sort((a, b) => a.localeCompare(b));
+
         let menuText = `Halo @${senderPhone}!\n\nBerikut adalah daftar perintah yang tersedia:\n\n`;
-        for (const [category, cmds] of Object.entries(categories)) {
+        for (const category of sortedCategoryNames) {
             const emote = categoryEmojis[category.toLowerCase()] || '📂';
             menuText += `*${emote} ${category.toUpperCase()}*\n`;
-            for (const cmd of cmds) {
+            const sortedCmds = categories[category].sort((a, b) => a.name.localeCompare(b.name));
+            for (const cmd of sortedCmds) {
                 menuText += `- ${prefix}${cmd.name}\n`;
             }
             menuText += `\n`;
