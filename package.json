@@ -1,0 +1,38 @@
+{
+  "name": "lune",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "bun run index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jochris/LuneBot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/jochris/LuneBot/issues"
+  },
+  "homepage": "https://github.com/jochris/LuneBot#readme",
+  "imports": {
+    "#lib/*": "./lib/*.js",
+    "#helper/*": "./helper/*.js"
+  },
+  "dependencies": {
+    "@itsliaaa/baileys": "^0.3.18-final",
+    "axios": "^1.18.1",
+    "axios-cookiejar-support": "^7.0.0",
+    "cheerio": "^1.2.0",
+    "file-type": "^22.0.1",
+    "form-data": "^4.0.6",
+    "pino": "^10.3.1",
+    "qrcode-terminal": "^0.12.0",
+    "sharp": "^0.35.2",
+    "tough-cookie": "^6.0.1"
+  }
+}

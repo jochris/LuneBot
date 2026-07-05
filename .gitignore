@@ -1,0 +1,8 @@
+node_modules
+session
+.claude/settings.local.json
+.env
+.DS_Store
+*.log
+cache
+nohup.out
