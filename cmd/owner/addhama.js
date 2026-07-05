@@ -22,19 +22,23 @@ export default {
         }
 
         if (!targetJid) {
-            await m.reply('Silakan reply atau tag target user yang ingin ditambahkan sebagai hama. Contoh: .addhama <teks>');
+            await m.reply(global.config.responses.hamaTargetHelp);
             return;
         }
 
         if (!text) {
-            await m.reply('Silakan masukkan pesan respons yang ingin dikirimkan. Contoh: .addhama berisik lu');
+            await m.reply(global.config.responses.hamaTextHelp);
             return;
         }
 
         const normalized = normalizeJid(targetJid);
         addHama(normalized, text);
 
-        await m.reply(`Berhasil menambahkan @${normalized.split('@')[0]} sebagai target hama dengan respons: "${text}"`, {
+        const replyMsg = global.config.responses.addHamaSuccess
+            .replace('{user}', normalized.split('@')[0])
+            .replace('{text}', text);
+
+        await m.reply(replyMsg, {
             mentions: [normalized]
         });
     }

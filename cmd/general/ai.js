@@ -21,7 +21,7 @@ export default {
                     throw new Error(json.message || 'Gagal mereset sesi.');
                 }
 
-                await m.reply('Sesi obrolan AI Claude Anda berhasil di-reset!');
+                await m.reply(global.config.responses.aiReset);
             } catch (err) {
                 console.error('Error saat reset AI session:', err);
                 await m.reply(`Gagal mereset sesi AI: ${err.message}`);
@@ -35,7 +35,7 @@ export default {
         }
 
         if (!prompt) {
-            await m.reply('Silakan masukkan pertanyaan kamu. Contoh: *.ai jelaskan teori relativitas* atau *.ai reset* untuk menghapus riwayat obrolan.');
+            await m.reply(global.config.responses.aiHelp);
             return;
         }
 

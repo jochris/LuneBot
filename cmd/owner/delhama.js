@@ -17,14 +17,17 @@ export default {
         }
 
         if (!targetJid) {
-            await m.reply('Silakan reply atau tag target user yang ingin dihapus dari daftar hama.');
+            await m.reply(global.config.responses.hamaDeleteHelp);
             return;
         }
 
         const normalized = normalizeJid(targetJid);
         delHama(normalized);
 
-        await m.reply(`Berhasil menghapus @${normalized.split('@')[0]} dari daftar hama.`, {
+        const replyMsg = global.config.responses.delHamaSuccess
+            .replace('{user}', normalized.split('@')[0]);
+
+        await m.reply(replyMsg, {
             mentions: [normalized]
         });
     }

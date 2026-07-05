@@ -1,3 +1,6 @@
+import config from './config.js';
+global.config = config;
+
 import { connectToWhatsApp } from './lib/connect.js';
 import { handleMessage } from '#helper/messageHandler';
 import fs from 'fs';

@@ -7,6 +7,6 @@ export default {
     forOwner: true,
     async execute(sock, m, args) {
         saveSetting('self_mode', 'false');
-        await m.reply('Y dah');
+        await m.reply(global.config.responses.selfModeOff);
     }
 };

@@ -8,11 +8,11 @@ export default {
     forOwner: true,
     async execute(sock, m, args) {
         if (!m.isGroup) {
-            await m.reply('Perintah ini hanya dapat digunakan di dalam grup.');
+            await m.reply(global.config.responses.groupOnly);
             return;
         }
 
         banGroup(m.from);
-        await m.reply('udah syg');
+        await m.reply(global.config.responses.banGroupSuccess);
     }
 };
