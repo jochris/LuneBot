@@ -1,5 +1,6 @@
 import { bratGen } from '../../scrape/brat.js';
 import sharp from 'sharp';
+import { addStickerMetadata } from '../../helper/stickerExif.js';
 
 export default {
     name: 'brat',
@@ -34,7 +35,11 @@ export default {
                 .webp()
                 .toBuffer();
 
-            await sock.sendMessage(m.from, { sticker: webpBuffer }, { quoted: m.raw });
+            const packName = `LuneBot || ${m.pushName || 'User'}`;
+            const author = 'sewa bot hubungi 62895416602000';
+            const webpWithMetadata = await addStickerMetadata(webpBuffer, packName, author);
+
+            await sock.sendMessage(m.from, { sticker: webpWithMetadata }, { quoted: m.raw });
             await m.react('✅');
         } catch (err) {
             console.error('Error saat membuat brat:', err);

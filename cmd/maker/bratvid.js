@@ -1,6 +1,7 @@
 import { bratVid } from '../../scrape/brat.js';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import { addStickerMetadata } from '../../helper/stickerExif.js';
 import fs from 'fs';
 import path from 'path';
 
@@ -58,7 +59,11 @@ export default {
             fs.unlinkSync(tempMp4);
             fs.unlinkSync(tempWebp);
 
-            await sock.sendMessage(m.from, { sticker: webpBuffer }, { quoted: m.raw });
+            const packName = `LuneBot || ${m.pushName || 'User'}`;
+            const author = 'sewa bot hubungi 62895416602000';
+            const webpWithMetadata = await addStickerMetadata(webpBuffer, packName, author);
+
+            await sock.sendMessage(m.from, { sticker: webpWithMetadata }, { quoted: m.raw });
             await m.react('✅');
         } catch (err) {
             console.error('Error saat membuat bratvid sticker:', err);
