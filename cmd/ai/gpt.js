@@ -52,7 +52,7 @@ export default {
 
             if (isImage) {
                 imageBuffer = await m.download();
-                mimeType = m.type === 'imageMessage' ? m.mime : m.quoted.mime;
+                mimeType = m.type === 'imageMessage' ? m.msg?.mimetype : m.quoted.msg?.mimetype;
             }
 
             const res = await chatMultimodel(prompt || 'Jelaskan gambar ini', sessionId, model, imageBuffer, mimeType, false);
