@@ -41,10 +41,14 @@ export default {
             for (let i = 0; i < maxPoll; i++) {
                 await sock.sendMessage(m.from, { edit: statusMsg.key, text: `⏳ Sedang memproses dan merender lagu... (${Math.round(((i + 1) / maxPoll) * 100)}%)` });
                 await new Promise(resolve => setTimeout(resolve, pollDelayMs));
-                const progress = await getProgress(taskId, identityId, token);
-                if (progress && progress.music_file) {
-                    completedData = progress;
-                    break;
+                try {
+                    const progress = await getProgress(taskId, identityId, token);
+                    if (progress && progress.music_file) {
+                        completedData = progress;
+                        break;
+                    }
+                } catch (pollErr) {
+                    console.warn(`Upstream poll attempt ${i + 1} failed, ignoring: ${pollErr.message}`);
                 }
             }
 
