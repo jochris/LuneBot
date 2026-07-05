@@ -2,7 +2,7 @@ import { drawImage } from '../../scrape/flux.js';
 
 export default {
     name: 'draw',
-    aliases: ['flux', 'dalle3', 'paint', 'image'],
+    aliases: ['flux', 'dalle3', 'paint', 'image', 'turbo', 'sd3', 'sdxl'],
     description: 'Menghasilkan gambar realistis / artistik menggunakan AI.',
     category: 'ai',
     async execute(sock, m, args) {
@@ -14,10 +14,8 @@ export default {
         const prompt = args.join(' ');
         let model = 'flux';
         const cmdName = m.body.slice(1).split(' ')[0].toLowerCase();
-        if (cmdName === 'dalle3') {
-            model = 'dalle3';
-        } else if (cmdName === 'flux') {
-            model = 'flux';
+        if (['dalle3', 'flux', 'turbo', 'sd3', 'sdxl'].includes(cmdName)) {
+            model = cmdName;
         }
 
         try {
