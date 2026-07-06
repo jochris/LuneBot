@@ -4,6 +4,7 @@ export default {
     name: 'testreply',
     description: 'Mengirimkan tombol balas cepat (quick reply) untuk uji coba.',
     category: 'testing',
+    forOwner: true,
     async execute(sock, m, args) {
         try {
             const msg = generateWAMessageFromContent(m.from, {

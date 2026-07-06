@@ -4,6 +4,7 @@ export default {
     name: 'testlist',
     description: 'Mengirimkan pesan list interaktif untuk uji coba.',
     category: 'testing',
+    forOwner: true,
     async execute(sock, m, args) {
         try {
             const msg = generateWAMessageFromContent(m.from, {

@@ -2,6 +2,7 @@ export default {
     name: 'testcarousel',
     description: 'Mengirimkan pesan carousel interaktif untuk uji coba.',
     category: 'testing',
+    forOwner: true,
     async execute(sock, m, args) {
         const ownerNumber = process.env.OWNER_NUMBER || '62895416602000';
 

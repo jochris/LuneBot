@@ -19,6 +19,7 @@ export default {
     name: 'testubed',
     description: 'Menguji coba tampilan pesan tombol gabungan v1 dengan gambar lokasi.',
     category: 'testing',
+    forOwner: true,
     async execute(sock, m, args) {
         try {
             const thumb = await getThumb(imageUrl);

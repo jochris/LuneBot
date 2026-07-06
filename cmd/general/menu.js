@@ -46,6 +46,7 @@ export default {
         const uniqueCommands = new Set(commands.values());
         for (const cmd of uniqueCommands) {
             const cat = cmd.category || 'other';
+            if (cat.toLowerCase() === 'testing') continue;
             if (!categories[cat]) {
                 categories[cat] = [];
             }

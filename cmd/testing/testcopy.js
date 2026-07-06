@@ -4,6 +4,7 @@ export default {
     name: 'testcopy',
     description: 'Mengirimkan tombol salin teks untuk uji coba.',
     category: 'testing',
+    forOwner: true,
     async execute(sock, m, args) {
         try {
             const msg = generateWAMessageFromContent(m.from, {
