@@ -48,6 +48,52 @@ export async function handleMessage(sock, rawMsg, commands) {
             }
         }
 
+        const prefix = getSetting('prefix', process.env.PREFIX || '.');
+        const ownerNoPrefix = process.env.OWNER_PREFIX === 'false';
+
+        let isCommand = false;
+        let args = [];
+        let cmdName = '';
+
+        if (m.body) {
+            if (m.body.startsWith(prefix)) {
+                isCommand = true;
+                args = m.body.slice(prefix.length).trim().split(/ +/);
+                cmdName = args.shift().toLowerCase();
+            } else if (isOwner && ownerNoPrefix) {
+                args = m.body.trim().split(/ +/);
+                cmdName = args.shift().toLowerCase();
+                if (commands.has(cmdName)) {
+                    isCommand = true;
+                }
+            }
+        }
+
+        const divider = '━'.repeat(40);
+        const logName = m.pushName || 'User';
+        const logFitur = isCommand ? `${prefix}${cmdName}` : '-';
+        
+        let logMedia = '-';
+        if (m.type === 'imageMessage') logMedia = 'Image';
+        else if (m.type === 'videoMessage') logMedia = 'Video';
+        else if (m.type === 'audioMessage') logMedia = 'Audio';
+        else if (m.type === 'stickerMessage') logMedia = 'Sticker';
+        else if (m.type === 'documentMessage') logMedia = 'Document';
+
+        const logContext = m.isGroup ? 'Group' : 'Private';
+        
+        let logSize = '-';
+        if (m.msg && m.msg.fileLength) {
+            const bytes = Number(m.msg.fileLength);
+            if (bytes > 1024 * 1024) logSize = `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+            else if (bytes > 1024) logSize = `${(bytes / 1024).toFixed(2)} KB`;
+            else logSize = `${bytes} B`;
+        } else if (m.body) {
+            logSize = `${m.body.length} Chars`;
+        }
+
+        console.log(`\n\x1b[36m${divider}\x1b[0m\n\x1b[33m👤 Name\x1b[0m   : ${logName}\n\x1b[32m🤖 Fitur\x1b[0m  : ${logFitur}\n\x1b[35m📂 Media\x1b[0m  : ${logMedia}\n\x1b[34m💬 Context\x1b[0m: ${logContext}\n\x1b[37m📦 Size\x1b[0m   : ${logSize}\n\x1b[36m${divider}\x1b[0m\n`);
+
         if (!m.body) return;
 
         const selfMode = getSetting('self_mode', 'false') === 'true';
@@ -66,25 +112,6 @@ export async function handleMessage(sock, rawMsg, commands) {
                 m.reply(result.trim() || 'Success (no output)');
             });
             return;
-        }
-
-        const prefix = getSetting('prefix', process.env.PREFIX || '.');
-        const ownerNoPrefix = process.env.OWNER_PREFIX === 'false';
-
-        let isCommand = false;
-        let args = [];
-        let cmdName = '';
-
-        if (m.body.startsWith(prefix)) {
-            isCommand = true;
-            args = m.body.slice(prefix.length).trim().split(/ +/);
-            cmdName = args.shift().toLowerCase();
-        } else if (isOwner && ownerNoPrefix) {
-            args = m.body.trim().split(/ +/);
-            cmdName = args.shift().toLowerCase();
-            if (commands.has(cmdName)) {
-                isCommand = true;
-            }
         }
 
         if (isCommand) {
