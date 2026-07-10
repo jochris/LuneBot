@@ -138,3 +138,25 @@ export function isOwnerJid(jid) {
 
     return false;
 }
+
+export function resolvePhone(jid) {
+    if (!jid) return '';
+    const decoded = decodeJid(jid);
+    if (!decoded) return '';
+    const { user, server } = decoded;
+
+    if (server === 's.whatsapp.net') {
+        return user;
+    }
+
+    if (server === 'lid') {
+        try {
+            const reversePath = path.join('./session', `lid-mapping-${user}_reverse.json`);
+            if (fs.existsSync(reversePath)) {
+                const content = fs.readFileSync(reversePath, 'utf8').trim();
+                return JSON.parse(content);
+            }
+        } catch {}
+    }
+    return user;
+}

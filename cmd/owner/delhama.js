@@ -1,5 +1,5 @@
 import { delHama } from '../../helper/hama.js';
-import { normalizeJid } from '../../helper/jid.js';
+import { normalizeJid, toJid } from '../../helper/jid.js';
 
 export default {
     name: 'delhama',
@@ -14,10 +14,15 @@ export default {
             targetJid = m.quoted.sender;
         } else if (m.mentions && m.mentions.length > 0) {
             targetJid = m.mentions[0];
+        } else if (args[0]) {
+            const cleanNum = args[0].replace(/[^0-9]/g, '');
+            if (cleanNum.length >= 8) {
+                targetJid = toJid(cleanNum);
+            }
         }
 
         if (!targetJid) {
-            await m.reply(global.config.responses.hamaDeleteHelp);
+            await m.reply(global.config.responses.hamaDeleteHelp + ' atau masukkan nomor langsung (contoh: .delhama 628123456789)');
             return;
         }
 
