@@ -1,17 +1,11 @@
-import { db } from '#lib/db';
+import fs from 'fs';
 import os from 'os';
 
 export default {
     name: 'info',
-    description: 'Menampilkan informasi sistem dan status bot.',
+    description: 'Menampilkan informasi status runtime dan penggunaan memori bot.',
     category: 'general',
-    async execute(sock, m, args, commands) {
-        const botName = process.env.BOT_NAME || 'LuneBot';
-        
-        const totalGroups = db.query('SELECT COUNT(*) AS count FROM groups').get().count;
-        const totalContacts = db.query('SELECT COUNT(*) AS count FROM contacts').get().count;
-        const totalSettings = db.query('SELECT COUNT(*) AS count FROM settings').get().count;
-
+    async execute(sock, m, args) {
         const uptimeSeconds = process.uptime();
         const days = Math.floor(uptimeSeconds / (3600 * 24));
         const hours = Math.floor((uptimeSeconds % (3600 * 24)) / 3600);
@@ -25,8 +19,33 @@ export default {
 
         const memory = process.memoryUsage();
         const rssMB = (memory.rss / 1024 / 1024).toFixed(2);
+        const heapTotalMB = (memory.heapTotal / 1024 / 1024).toFixed(2);
         const heapUsedMB = (memory.heapUsed / 1024 / 1024).toFixed(2);
-        
+        const externalMB = (memory.external / 1024 / 1024).toFixed(2);
+
+        let swapTotal = 'N/A';
+        let swapFree = 'N/A';
+        let swapUsed = 'N/A';
+
+        try {
+            if (os.platform() === 'linux') {
+                const meminfo = fs.readFileSync('/proc/meminfo', 'utf8');
+                const lines = meminfo.split('\n');
+                const totalLine = lines.find(l => l.startsWith('SwapTotal:'));
+                const freeLine = lines.find(l => l.startsWith('SwapFree:'));
+                if (totalLine && freeLine) {
+                    const totalKb = parseInt(totalLine.replace(/[^0-9]/g, ''), 10);
+                    const freeKb = parseInt(freeLine.replace(/[^0-9]/g, ''), 10);
+                    const usedKb = totalKb - freeKb;
+                    
+                    swapTotal = `${(totalKb / 1024).toFixed(2)} MB`;
+                    swapFree = `${(freeKb / 1024).toFixed(2)} MB`;
+                    swapUsed = `${(usedKb / 1024).toFixed(2)} MB`;
+                }
+            }
+        } catch {
+        }
+
         const totalMemGB = (os.totalmem() / 1024 / 1024 / 1024).toFixed(2);
         const freeMemGB = (os.freemem() / 1024 / 1024 / 1024).toFixed(2);
         const cpus = os.cpus();
@@ -36,39 +55,29 @@ export default {
         const platform = os.platform();
         const release = os.release();
         const architecture = os.arch();
-        
-        const totalCmds = commands ? new Set(commands.values()).size : 0;
-        
-        const botJid = sock.user ? sock.user.id.split(':')[0] + '@s.whatsapp.net' : 'N/A';
-        const botNumber = sock.user ? sock.user.id.split(':')[0] : 'N/A';
-        const botPushName = sock.user ? sock.user.name : 'N/A';
 
-        let infoText = `🤖 *${botName} - STATUS & INFORMASI SISTEM* 🌙\n\n`;
-        
-        infoText += `💬 *INFORMASI AKUN BOT*:\n`;
-        infoText += ` ├ • *Nama Bot*: ${botPushName}\n`;
-        infoText += ` ├ • *Nomor Bot*: +${botNumber}\n`;
-        infoText += ` ├ • *JID Bot*: ${botJid}\n`;
-        infoText += ` └ • *Owner*: +${process.env.OWNER_NUMBER || 'N/A'}\n\n`;
+        let infoText = `📊 *RUNTIME STATUS & MEMORY INFO* 📊\n\n`;
 
-        infoText += `💻 *SPESIFIKASI HOST / OS*:\n`;
-        infoText += ` ├ • *OS Platform*: ${platform} (${architecture})\n`;
-        infoText += ` ├ • *OS Release*: ${release}\n`;
-        infoText += ` ├ • *CPU*: ${cpuModel} (${cpuCores} Cores)\n`;
-        infoText += ` └ • *RAM Host*: ${freeMemGB} GB free / ${totalMemGB} GB total\n\n`;
-
-        infoText += `🚀 *RUNTIME & MEMORY BOT*:\n`;
+        infoText += `🚀 *SYSTEM RUNTIME*:\n`;
         infoText += ` ├ • *Runtime*: Bun v${process.versions.bun || 'N/A'} (Node ${process.version})\n`;
         infoText += ` ├ • *Uptime*: ${uptimeStr}\n`;
-        infoText += ` ├ • *RSS Memory*: ${rssMB} MB\n`;
-        infoText += ` └ • *Heap Used*: ${heapUsedMB} MB\n\n`;
+        infoText += ` ├ • *Platform*: ${platform} (${architecture})\n`;
+        infoText += ` ├ • *Release*: ${release}\n`;
+        infoText += ` └ • *CPU*: ${cpuModel} (${cpuCores} Cores)\n\n`;
 
-        infoText += `📊 *STATISTIK BOT & DATABASE*:\n`;
-        infoText += ` ├ • *Total Command*: ${totalCmds} fitur termuat\n`;
-        infoText += ` ├ • *Total Kontak*: ${totalContacts} kontak terindeks\n`;
-        infoText += ` ├ • *Total Grup*: ${totalGroups} grup terindeks\n`;
-        infoText += ` └ • *Pengaturan DB*: ${totalSettings} data konfigurasi\n\n`;
-        
+        infoText += `📟 *MEMORI PROSES BOT*:\n`;
+        infoText += ` ├ • *RSS Memory*: ${rssMB} MB\n`;
+        infoText += ` ├ • *Heap Total*: ${heapTotalMB} MB\n`;
+        infoText += ` ├ • *Heap Used*: ${heapUsedMB} MB\n`;
+        infoText += ` └ • *External*: ${externalMB} MB\n\n`;
+
+        infoText += `💾 *RAM & SWAP HOST*:\n`;
+        infoText += ` ├ • *RAM Total*: ${totalMemGB} GB\n`;
+        infoText += ` ├ • *RAM Free*: ${freeMemGB} GB\n`;
+        infoText += ` ├ • *Swap Total*: ${swapTotal}\n`;
+        infoText += ` ├ • *Swap Free*: ${swapFree}\n`;
+        infoText += ` └ • *Swap Used*: ${swapUsed}\n\n`;
+
         infoText += `⏰ _Waktu Server: ${new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })} WIB_`;
 
         await m.reply(infoText.trim());
