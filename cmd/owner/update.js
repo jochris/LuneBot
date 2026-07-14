@@ -10,37 +10,44 @@ export default {
     category: 'owner',
     forOwner: true,
     async execute(sock, m, args) {
-        await m.reply('Memulai proses pembaruan dari GitHub...');
+        const sent = await m.reply('⏳ Memulai proses pembaruan dari GitHub...');
+        const key = sent.key;
+
+        const editMsg = async (text) => {
+            await sock.sendMessage(m.from, { text, edit: key });
+        };
 
         try {
             const { stdout, stderr } = await execAsync('git pull');
             
             if (stdout.includes('Already up to date.') || stdout.includes('Already up-to-date.')) {
-                await m.reply('Script sudah menggunakan versi terbaru dari GitHub.');
+                await editMsg('✅ Script sudah menggunakan versi terbaru dari GitHub.');
                 return;
             }
 
             let replyMsg = `*Hasil Git Pull:*\n\`\`\`${stdout || stderr}\`\`\`\n\n`;
+            await editMsg(replyMsg);
 
             const isPackageChanged = stdout.includes('package.json') || stdout.includes('bun.lock');
             
             if (isPackageChanged) {
-                replyMsg += 'Mendeteksi perubahan dependensi. Menjalankan "bun install"...\n';
-                await m.reply(replyMsg);
+                replyMsg += '📦 Mendeteksi perubahan dependensi. Menjalankan "bun install"...\n';
+                await editMsg(replyMsg);
                 
                 const { stdout: installOut, stderr: installErr } = await execAsync('bun install');
                 replyMsg += `*Hasil Bun Install:*\n\`\`\`${installOut || installErr}\`\`\`\n\n`;
+                await editMsg(replyMsg);
             }
 
-            replyMsg += 'Pembaruan selesai. Menjalankan restart bot...';
-            await m.reply(replyMsg);
+            replyMsg += '🔄 Pembaruan selesai. Menjalankan restart bot...';
+            await editMsg(replyMsg);
 
             setTimeout(() => {
                 global.restartBot();
             }, 2000);
         } catch (err) {
             console.error('Error saat melakukan auto-update:', err);
-            await m.reply(`✗ Terjadi kesalahan saat pembaruan:\n${err.message}`);
+            await editMsg(`✗ Terjadi kesalahan saat pembaruan:\n${err.message}`);
         }
     }
 };
