@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "bun run index.js",
+    "start": "while true; do RUN_FROM_LOOP=true bun run index.js; [ $? -eq 0 ] && break; echo 'Restarting bot in 2 seconds...'; sleep 2; done",
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "bun run patch-baileys.js"
   },
