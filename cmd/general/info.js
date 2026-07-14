@@ -19,9 +19,12 @@ export default {
 
         const memory = process.memoryUsage();
         const rssMB = (memory.rss / 1024 / 1024).toFixed(2);
+        const heapTotalMB = (memory.heapTotal / 1024 / 1024).toFixed(2);
         const heapUsedMB = (memory.heapUsed / 1024 / 1024).toFixed(2);
+        const externalMB = (memory.external / 1024 / 1024).toFixed(2);
 
         let swapTotal = 'N/A';
+        let swapFree = 'N/A';
         let swapUsed = 'N/A';
 
         try {
@@ -36,6 +39,7 @@ export default {
                     const usedKb = totalKb - freeKb;
                     
                     swapTotal = `${(totalKb / 1024).toFixed(2)} MB`;
+                    swapFree = `${(freeKb / 1024).toFixed(2)} MB`;
                     swapUsed = `${(usedKb / 1024).toFixed(2)} MB`;
                 }
             }
@@ -44,20 +48,36 @@ export default {
 
         const totalMemGB = (os.totalmem() / 1024 / 1024 / 1024).toFixed(2);
         const freeMemGB = (os.freemem() / 1024 / 1024 / 1024).toFixed(2);
+        const cpus = os.cpus();
+        const cpuModel = cpus && cpus.length > 0 ? cpus[0].model.trim() : 'Unknown CPU';
+        const cpuCores = cpus ? cpus.length : 0;
 
         const platform = os.platform();
+        const release = os.release();
         const architecture = os.arch();
 
         let infoText = '';
-        infoText += `💻 *Platform*: ${platform} (${architecture})\n`;
-        infoText += `🚀 *Runtime*: Bun v${process.versions.bun || 'N/A'} (Node ${process.version})\n`;
-        infoText += `⏱️ *Uptime*: ${uptimeStr}\n`;
-        infoText += `📟 *RSS Memory*: ${rssMB} MB\n`;
-        infoText += `📈 *Heap Used*: ${heapUsedMB} MB\n`;
-        infoText += `💾 *RAM Host*: ${freeMemGB} GB free / ${totalMemGB} GB total\n`;
-        if (os.platform() === 'linux') {
-            infoText += `🔄 *Swap Host*: ${swapUsed} used / ${swapTotal} total\n`;
-        }
+
+        infoText += `🚀 *SYSTEM RUNTIME*:\n`;
+        infoText += ` ├ • *Runtime*: Bun v${process.versions.bun || 'N/A'} (Node ${process.version})\n`;
+        infoText += ` ├ • *Uptime*: ${uptimeStr}\n`;
+        infoText += ` ├ • *Platform*: ${platform} (${architecture})\n`;
+        infoText += ` ├ • *Release*: ${release}\n`;
+        infoText += ` └ • *CPU*: ${cpuModel} (${cpuCores} Cores)\n\n`;
+
+        infoText += `📟 *MEMORI PROSES BOT*:\n`;
+        infoText += ` ├ • *RSS Memory*: ${rssMB} MB\n`;
+        infoText += ` ├ • *Heap Total*: ${heapTotalMB} MB\n`;
+        infoText += ` ├ • *Heap Used*: ${heapUsedMB} MB\n`;
+        infoText += ` └ • *External*: ${externalMB} MB\n\n`;
+
+        infoText += `💾 *RAM & SWAP HOST*:\n`;
+        infoText += ` ├ • *RAM Total*: ${totalMemGB} GB\n`;
+        infoText += ` ├ • *RAM Free*: ${freeMemGB} GB\n`;
+        infoText += ` ├ • *Swap Total*: ${swapTotal}\n`;
+        infoText += ` ├ • *Swap Free*: ${swapFree}\n`;
+        infoText += ` └ • *Swap Used*: ${swapUsed}\n\n`;
+
         infoText += `⏰ _Waktu Server: ${new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })} WIB_`;
 
         await m.reply(infoText.trim());
