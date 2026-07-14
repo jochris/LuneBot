@@ -7,22 +7,6 @@ import { handleMessage } from '#helper/messageHandler';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
-import { spawn } from 'child_process';
-
-global.restartBot = () => {
-    console.log('Memulai ulang bot...');
-    if (process.env.RUN_FROM_LOOP === 'true') {
-        process.exit(3);
-    } else {
-        const child = spawn(process.argv[0], process.argv.slice(1), {
-            detached: true,
-            stdio: 'ignore'
-        });
-        child.unref();
-        process.exit(0);
-    }
-};
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
