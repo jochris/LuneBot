@@ -1,4 +1,4 @@
-import { getSetting, getGroup, saveGroup } from '../lib/store.js';
+import { getSetting, getGroup, saveGroup } from '#lib/store';
 
 function getJid(p) {
     if (!p) return '';

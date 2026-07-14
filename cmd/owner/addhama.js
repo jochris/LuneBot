@@ -1,6 +1,6 @@
-import { addHama } from '../../helper/hama.js';
-import { normalizeJid, toJid } from '../../helper/jid.js';
-import { pendingHamaSticker } from '../../helper/pendingHama.js';
+import { addHama } from '#helper/hama';
+import { normalizeJid, toJid } from '#helper/jid';
+import { pendingHamaSticker } from '#helper/pendingHama';
 
 export default {
     name: 'addhama',

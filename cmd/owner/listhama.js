@@ -1,4 +1,4 @@
-import { getHamas } from '../../helper/hama.js';
+import { getHamas } from '#helper/hama';
 
 export default {
     name: 'listhama',

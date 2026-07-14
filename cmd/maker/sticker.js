@@ -1,5 +1,5 @@
 import sharp from 'sharp';
-import { addStickerMetadata } from '../../helper/stickerExif.js';
+import { addStickerMetadata } from '#helper/stickerExif';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import fs from 'fs';

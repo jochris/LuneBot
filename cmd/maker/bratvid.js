@@ -1,7 +1,7 @@
 import { bratVid } from '../../scrape/brat.js';
 import { exec } from 'child_process';
 import { promisify } from 'util';
-import { addStickerMetadata } from '../../helper/stickerExif.js';
+import { addStickerMetadata } from '#helper/stickerExif';
 import fs from 'fs';
 import path from 'path';
 

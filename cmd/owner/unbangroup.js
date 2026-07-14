@@ -1,4 +1,4 @@
-import { unbanGroup } from '../../helper/bannedGroups.js';
+import { unbanGroup } from '#helper/bannedGroups';
 
 export default {
     name: 'unbangroup',

@@ -1,5 +1,5 @@
-import { delHama } from '../../helper/hama.js';
-import { normalizeJid, toJid } from '../../helper/jid.js';
+import { delHama } from '#helper/hama';
+import { normalizeJid, toJid } from '#helper/jid';
 
 export default {
     name: 'delhama',

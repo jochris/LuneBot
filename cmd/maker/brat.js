@@ -1,6 +1,6 @@
 import { bratGen } from '../../scrape/brat.js';
 import sharp from 'sharp';
-import { addStickerMetadata } from '../../helper/stickerExif.js';
+import { addStickerMetadata } from '#helper/stickerExif';
 
 export default {
     name: 'brat',

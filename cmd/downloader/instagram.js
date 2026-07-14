@@ -1,4 +1,4 @@
-import { normalizeJid } from '../../helper/jid.js';
+import { normalizeJid } from '#helper/jid';
 
 function detectType(url) {
     try {
