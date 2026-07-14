@@ -12,7 +12,7 @@ import { spawn } from 'child_process';
 global.restartBot = () => {
     console.log('Memulai ulang bot...');
     if (process.env.RUN_FROM_LOOP === 'true') {
-        process.exit(1);
+        process.exit(3);
     } else {
         const child = spawn(process.argv[0], process.argv.slice(1), {
             detached: true,
